@@ -1,38 +1,3 @@
-from enum import Enum
-import enum
-
-
-class Outlook(Enum):
-    EMPTY = 0
-    SUNNY = 1
-    OVERCAST = 2
-    RAINY = 3
-
-
-class Temp(Enum):
-    EMPTY = 0
-    HOT = 1
-    MILD = 2
-    COOL = 3
-
-
-class Humidity(Enum):
-    EMPTY = 0
-    HIGH = 1
-    NORMAL = 2
-
-
-class Windy(Enum):
-    EMPTY = 0
-    TRUE = 1
-    FALSE = 2
-
-
-class Play(Enum):
-    TRUE = 1
-    FALSE = 2
-
-
 attributes = [
     ['', 'sunny', 'overcast', 'rainy'],
     ['', 'hot', 'mild', 'cool'],
@@ -116,8 +81,7 @@ def process():
     for i, rule in enumerate(w_data):
         r = calc_r(i, w_data)
         cmax = get_cmax(rule)
-        print(f'{i + 1}: {rule}, supp: {r / n:.2f}, cmax: {cmax}, conf: {cmax / r:.2f}')
-
+        print(f'{i + 1}: {rule}, supp: {r / n}, conf: {cmax / r}')
 
     # subvalues = [item in w_data[10] for item in w_data[12] if item]
     # print(subvalues)

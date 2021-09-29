@@ -5,6 +5,7 @@ Dělíme na numerická a kategoriální
 
 ### Numerická
  * Matematická - dají se s nimi dělat mat. operace
+ * Kdo ví jaké jsou ty ostatní
 
 
 ### Kategoriální
@@ -28,3 +29,17 @@ mají stejné měřítko.
 
 Jakýkoliv bod lze vyjádřit jako lineární kombinaci bázových vektorů prostoru.
 
+Skalárním součinem lze určit vzdálenost dvou vektorů.
+Podobnost měříme kosínovou podobnost, která je v intervalu od 0 do 1.
+
+Toto jsou míry, míry si jsou symetrické.
+
+* Rozptyl - vzdálenost bodů od průměru 
+* Mean, Průměr matice - průměr ze všech bodů
+
+### Centered Data Matrix
+Počátek souřadnicového systému přesuneme na průměr
+
+### Linární ne/závislost
+Sloupce, které jsou lineárně závislé na ostatních se dá vynechat, má to spojitost
+s hodností (rank) matice.
