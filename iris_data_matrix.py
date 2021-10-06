@@ -3,10 +3,10 @@ from math import sqrt
 
 
 class IrisMatrix:
-    def __init__(self, dataset: List[float]):
+    def __init__(self, dataset: List[List[float]]):
         self.cols: int = len(dataset[0])
         self.rows: int = len(dataset)
-        self.m: List[float] = dataset
+        self.m: List[List[float]] = dataset
 
     def calc_avg_on_col(self, col_idx: int) -> float:
         return sum(map(lambda r: r[col_idx], self.m)) / self.rows
