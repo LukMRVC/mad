@@ -74,28 +74,6 @@ if __name__ == '__main__':
 
     sepal_lengths = iris_matrix.get_col_vector(0)
 
-    # normal_distributions = [
-    #     normal_distribution(x, avgs[0], variances[0]) for x in range(1, 10)
-    # ]
-    #
-    # cumulative_distributions = []
-    # for i in range(len(sepal_lengths)):
-    #     nd = normal_distribution(sepal_lengths[i], avgs[0], variances[0])
-    #     cumulative_distributions.append(nd + sum(cumulative_distributions[:i]))
-
-    # print(normal_distributions)
-    # print(sum(normal_distributions))
-    # print(cumulative_distributions)
-    # plt.ylabel('Distributions')
-    # plt.xlabel('sepal length')
-    # plt.plot(sepal_lengths, normal_distributions)
-    # plt.show()
-    #
-    # plt.ylabel('Cumulative distributions')
-    # plt.xlabel('sepal length')
-    # plt.plot(sepal_lengths, cumulative_distributions)
-    # plt.show()
-
     interval_len = 0.25
     min_len = min(sepal_lengths)
     max_len = max(sepal_lengths)
@@ -130,3 +108,21 @@ if __name__ == '__main__':
     plt.xlabel('teoretical random vars')
     plt.plot(teoretical_x, teoretical_y)
     plt.show()
+
+
+    cumulative_normal_dist_empiric = []
+    for i, _int in enumerate(intervals):
+        cumulative_normal_dist_empiric.append(_int.p + sum([_i.p for _i in intervals[:i] ]))
+
+    plt.ylabel("Cumulative empiric distributions")
+    plt.xlabel("Intervals middle")
+    plt.bar([i.end for i in intervals], cumulative_normal_dist_empiric)
+
+    cumulative_normal_dist_teoretical = []
+    for i, val in enumerate(teoretical_y):
+        cumulative_normal_dist_teoretical.append( val + sum(teoretical_y[:i]))
+
+    
+    plt.ylabel("Cumulative teoretical normal distributions")
+    plt.xlabel("teoretical random vars")
+    plt.bar([i.end for i in intervals], cumulative_normal_dist_empiric)
