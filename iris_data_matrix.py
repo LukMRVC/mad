@@ -116,7 +116,7 @@ if __name__ == '__main__':
 
     plt.ylabel("Cumulative empiric distributions")
     plt.xlabel("Intervals middle")
-    plt.bar([i.end for i in intervals], cumulative_normal_dist_empiric)
+    plt.plot([i.end for i in intervals], cumulative_normal_dist_empiric)
 
     cumulative_normal_dist_teoretical = []
     for i, val in enumerate(teoretical_y):
@@ -125,4 +125,4 @@ if __name__ == '__main__':
     
     plt.ylabel("Cumulative teoretical normal distributions")
     plt.xlabel("teoretical random vars")
-    plt.bar([i.end for i in intervals], cumulative_normal_dist_empiric)
+    plt.plot([i.end for i in intervals], cumulative_normal_dist_empiric)
