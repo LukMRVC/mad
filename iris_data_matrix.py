@@ -2,7 +2,6 @@ from typing import List
 import math
 from normal_distribution import normal_distribution
 import matplotlib.pyplot as plt
-import numpy as np
 from interval import Interval
 
 
@@ -71,58 +70,63 @@ if __name__ == '__main__':
     total_var = iris_matrix.calc_total_var(avgs)
 
     print(f'Total Variance: {total_var}')
+    labels = 'sepal_length;sepal_width;petal_length;petal_width;'.split(';')
+    for __k in range(4):
+        label = labels[__k]
+        if __k == 0:
+            i = 1
+            teoretical_x = []
+            teoretical_y = []
+            while i <= 10:
+                teoretical_x.append(i)
+                teoretical_y.append(normal_distribution(i, avgs[0], variances[0]))
+                i += 0.1
 
-    sepal_lengths = iris_matrix.get_col_vector(0)
+            plt.ylabel('Teoretical distributions')
+            plt.xlabel('teoretical random vars')
+            plt.plot(teoretical_x, teoretical_y)
+            plt.show()
 
-    interval_len = 0.25
-    min_len = min(sepal_lengths)
-    max_len = max(sepal_lengths)
-    curr_max = min_len + interval_len
-    intervals = [Interval(min_len, curr_max)]
-    while curr_max < max_len:
-        intervals.append(Interval(curr_max, curr_max + interval_len))
-        curr_max += interval_len
+            cumulative_normal_dist_teoretical = []
+            for i, val in enumerate(teoretical_y):
+                cumulative_normal_dist_teoretical.append(val + sum(teoretical_y[:i]))
 
-    for i in intervals:
-        for l in sepal_lengths:
-            if i.in_interval(l):
-                i.increase()
+            plt.ylabel("Cumulative teoretical normal distributions")
+            plt.xlabel("teoretical random vars")
+            plt.plot(teoretical_x, cumulative_normal_dist_teoretical)
+            plt.show()
 
-    for i in intervals:
-        i.set_probability(len(sepal_lengths))
+        sepal_lengths = iris_matrix.get_col_vector(__k)
 
-    plt.ylabel('Empiric distributions')
-    plt.xlabel('Intervals middle')
-    plt.bar([i.end for i in intervals], [i.p for i in intervals])
-    plt.show()
+        interval_len = 0.25
+        min_len = min(sepal_lengths)
+        max_len = max(sepal_lengths)
+        curr_max = min_len + interval_len
+        intervals = [Interval(min_len, curr_max)]
+        while curr_max < max_len:
+            intervals.append(Interval(curr_max, curr_max + interval_len))
+            curr_max += interval_len
 
-    i = 1
-    teoretical_x = []
-    teoretical_y = []
-    while i <= 10:
-        teoretical_x.append(i)
-        teoretical_y.append(normal_distribution(i, avgs[0], variances[0]))
-        i += 0.1
+        for i in intervals:
+            for l in sepal_lengths:
+                if i.in_interval(l):
+                    i.increase()
 
-    plt.ylabel('Teoretical distributions')
-    plt.xlabel('teoretical random vars')
-    plt.plot(teoretical_x, teoretical_y)
-    plt.show()
+        for i in intervals:
+            i.set_probability(len(sepal_lengths))
+
+        plt.ylabel(f'Empiric distributions {label}')
+        plt.xlabel(f'Intervals middle {label}')
+        plt.bar([i.end for i in intervals], [i.p for i in intervals])
+        plt.show()
+
+        cumulative_normal_dist_empiric = []
+        for i, _int in enumerate(intervals):
+            cumulative_normal_dist_empiric.append(_int.p + sum([_i.p for _i in intervals[:i] ]))
+
+        plt.ylabel(f"Cumulative empiric distributions {label}")
+        plt.xlabel(f"Intervals middle {label}")
+        plt.plot([i.end for i in intervals], cumulative_normal_dist_empiric)
+        plt.show()
 
 
-    cumulative_normal_dist_empiric = []
-    for i, _int in enumerate(intervals):
-        cumulative_normal_dist_empiric.append(_int.p + sum([_i.p for _i in intervals[:i] ]))
-
-    plt.ylabel("Cumulative empiric distributions")
-    plt.xlabel("Intervals middle")
-    plt.plot([i.end for i in intervals], cumulative_normal_dist_empiric)
-
-    cumulative_normal_dist_teoretical = []
-    for i, val in enumerate(teoretical_y):
-        cumulative_normal_dist_teoretical.append( val + sum(teoretical_y[:i]))
-
-    
-    plt.ylabel("Cumulative teoretical normal distributions")
-    plt.xlabel("teoretical random vars")
-    plt.plot([i.end for i in intervals], cumulative_normal_dist_empiric)
