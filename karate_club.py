@@ -2,6 +2,7 @@
 Stahnout Gephi a vizualizovat
 """
 import matplotlib.pyplot as plt
+from typing import List
 
 
 class Matrix:
@@ -10,6 +11,15 @@ class Matrix:
         self.rows = rows
         self.cols = cols
         self.m = [init_with] * (rows * cols)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return str(self.m)
+
+    def from_flat_list(self, lst: list):
+        self.m = lst.copy()
 
     def insert_at(self, row, col, val) -> None:
         self.m[(row - 1) * self.cols + (col - 1)] = val

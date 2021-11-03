@@ -38,12 +38,13 @@ def euclid_distance(avg_vec: List[float], vec: List[float]):
     distance = 0
     for i in range(len(avg_vec)):
         point_distance = math.sqrt(
-            (avg_vec[i] - vec[i]) * (avg_vec[i] - vec[i]))
+            (avg_vec[i] - vec[i]) * (avg_vec[i] - vec[i])
+        )
         distance += point_distance
     return distance
 
 
-def load_iris_dataset(file_name: str):
+def load_iris_dataset(file_name: str) -> List[List[float]]:
     dataset = []
     with open(file_name) as f:
         header = f.readline()
