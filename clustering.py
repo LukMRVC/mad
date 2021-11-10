@@ -132,7 +132,6 @@ if __name__ == '__main__':
                 inserts = True
 
     it = 0
-    print(dst_matrix)
     while dst_matrix.size > 1:
         print(f'Iteration: {it}')
         it += 1
