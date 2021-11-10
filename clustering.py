@@ -63,15 +63,19 @@ class DistanceMatrix():
     def __init__(self, size: int, init_with: int = 0):
         self.size = size
         self.m = [init_with] * (self.size * self.size)
+        self.row_labels = {}
 
     def __repr__(self):
         return self.__str__()
 
     def __str__(self) -> str:
         str_rep = ''
-        for row in self.rows_i():
-            str_rep += f'{row}\n'
+        for i, row in enumerate(self.rows_i()):
+            str_rep += f'{self.row_labels[i]}: {row}\n'
         return str_rep
+
+    def row_label(self, row, label):
+        self.row_labels[row] = label
 
     def at(self, row, col):
         return self.m[row * self.size + col]
@@ -93,17 +97,28 @@ class DistanceMatrix():
         self.size -= 1
         pass
 
+    def row(self, idx: int) -> list:
+        return self.m[idx * self.size: (idx + 1) * self.size]
+
     def rows_i(self):
         for i in range(0, len(self.m), self.size):
             yield self.m[i: i + self.size]
 
 
+# pick_min_in_row
+def pick_mir(row: list, row_idx: int) -> float:
+    r = [x for i, x in enumerate(row) if i != row_idx]
+    return min(r)
+    pass
+
+
 if __name__ == '__main__':
     iris_data = load_iris_dataset('iris.csv')
-    clusters = [Cluster(i, [x]) for i, x in enumerate(iris_data[:10])]
+    clusters = [Cluster(i, [x]) for i, x in enumerate(iris_data)]
     dst_matrix = DistanceMatrix(size=len(clusters), init_with=-1)
     inserts = False
     for row, c1 in enumerate(clusters):
+        dst_matrix.row_label(row, c1.id)
         for col, c2 in enumerate(clusters):
             # already calculated
             if dst_matrix.at(row, col) > -1:
@@ -112,38 +127,71 @@ if __name__ == '__main__':
             if c2 == c1:
                 dst_matrix.insert_at(row, col, 0)
             else:
-                dst_matrix.insert_at(row, col, c1.calc_distance(c2, ClusterDistance.SINGLE_LINK))
+                dst_matrix.insert_at(row, col, c1.calc_distance(
+                    c2, ClusterDistance.SINGLE_LINK))
                 inserts = True
 
-        if not inserts:
-            print(f'No inserts for {row}')
-
+    it = 0
+    print(dst_matrix)
     while dst_matrix.size > 1:
-        minimal_cluster_distance = min(filter(lambda x: x != 0, dst_matrix.m))
-        minimal_cluster_distance_idx = dst_matrix.m.index(minimal_cluster_distance)
-        minimal_cluster_distance_row = minimal_cluster_distance_idx // dst_matrix.size
-        minimal_cluster_distance_col = minimal_cluster_distance_idx - (minimal_cluster_distance_row * dst_matrix.size)
-        print(f'MIN DISTANCE: {minimal_cluster_distance}, ROW: {minimal_cluster_distance_row}, COL: {minimal_cluster_distance_col}')
-        print(dst_matrix)
-        # I have indices of clusters that I need to merge
+        print(f'Iteration: {it}')
+        it += 1
+        rows_minimum = [pick_mir(r, i)
+                        for i, r in enumerate(dst_matrix.rows_i())]
+        cur_min = min(rows_minimum)
+        row_idx = rows_minimum.index(cur_min)
+        col_idx = dst_matrix.row(row_idx).index(cur_min)
 
-        try:
-            c1 = clusters[minimal_cluster_distance_row]
-            c2 = clusters[minimal_cluster_distance_col]
-        except IndexError as ex:
-            raise
+        # print(row_idx, col_idx)
+        c1 = clusters[row_idx]
+        c2 = clusters[col_idx]
+        print(f'{c1.history} -> {c2.history}')
+
         c1.append(c2)
-        clusters.pop(minimal_cluster_distance_col)
-        dst_matrix.remove(minimal_cluster_distance_col)
+        clusters.pop(col_idx)
+        dst_matrix.remove(col_idx)
 
         for col, cluster in enumerate(clusters):
             if cluster == c1:
-                dst_matrix.insert_at(minimal_cluster_distance_row, col, 0)
+                dst_matrix.insert_at(row_idx, col, 0)
             else:
-                dst_matrix.insert_at(minimal_cluster_distance_row, col,
-                                     c1.calc_distance(cluster, ClusterDistance.SINGLE_LINK))
-    print(dst_matrix.m)
-    pass
+                dst_matrix.insert_at(row_idx, col, c1.calc_distance(
+                    cluster, ClusterDistance.SINGLE_LINK))
+        # print('----------------------------------')
+
+    print(dst_matrix)
+    print(clusters[0].history)
+    #     if not inserts:
+    #         print(f'No inserts for {row}')
+
+    # while dst_matrix.size > 1:
+    #     minimal_cluster_distance = min()
+    #     minimal_cluster_distance_idx = dst_matrix.m.index(
+    #         minimal_cluster_distance)
+    #     minimal_cluster_distance_row = minimal_cluster_distance_idx // dst_matrix.size
+    #     minimal_cluster_distance_col = minimal_cluster_distance_idx - \
+    #         (minimal_cluster_distance_row * dst_matrix.size)
+    #     # print(f'MIN DISTANCE: {minimal_cluster_distance}, ROW: {minimal_cluster_distance_row}, COL: {minimal_cluster_distance_col}')
+    #     # print(dst_matrix)
+    #     # I have indices of clusters that I need to merge
+
+    #     try:
+    #         c1 = clusters[minimal_cluster_distance_row]
+    #         c2 = clusters[minimal_cluster_distance_col]
+    #     except IndexError as ex:
+    #         raise
+    #     c1.append(c2)
+    #     clusters.pop(minimal_cluster_distance_col)
+    #     dst_matrix.remove(minimal_cluster_distance_col)
+
+    #     for col, cluster in enumerate(clusters):
+    #         if cluster == c1:
+    #             dst_matrix.insert_at(minimal_cluster_distance_row, col, 0)
+    #         else:
+    #             dst_matrix.insert_at(minimal_cluster_distance_row, col,
+    #                                  c1.calc_distance(cluster, ClusterDistance.SINGLE_LINK))
+    # print(dst_matrix.m)
+    # pass
     # matrix = DistanceMatrix(size=4, init_with=0)
     #
     # matrix.insert_at(0, 0, 1)
