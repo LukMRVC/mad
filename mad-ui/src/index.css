@@ -1,0 +1,29 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 2rem;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+form {
+  max-width: 20rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+code {
+  font-family: Consolas,"courier new";
+  background-color: #f1f1f1;
+  padding: 0.25rem;
+  font-size: 105%;
+  line-height: 1.5rem;
+}
