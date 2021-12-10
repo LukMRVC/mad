@@ -1,6 +1,6 @@
 
-type Pair = [number, number];
-type Graph = { edges: Array<Pair>, vertices: number[] }
+export type Pair = [number, number];
+export type Graph = { edges: Array<Pair>, vertices: number[] }
 // N - number of starting nodes, S - number of steps, C - new connections
 export default function barabasiAlbert(n: number, s: number, c: number): Graph {
     if (c < 1 || c > n) {
@@ -19,13 +19,15 @@ export default function barabasiAlbert(n: number, s: number, c: number): Graph {
     const vertexDegreeExploded = [];
     for (const v of vertices) {
         // connect each vertex with C edges
+        const connected: number[] = [];
         while (vertexDegreeExploded.filter((vertex) => vertex === v).length < c) {
             let other = v;
-            while (other === v) {
+            while (other === v || connected.includes(other) || isEdgeBetween(v, other, edges)) {
                 other = pick(vertices);
             }
             vertexDegreeExploded.push(v, other);
             edges.push([v, other]);
+            connected.push(other);
         }
     }
 
@@ -52,9 +54,13 @@ export default function barabasiAlbert(n: number, s: number, c: number): Graph {
     }
 
     return {
-        edges,
         vertices,
+        edges,
     };
+}
+
+function isEdgeBetween(first: number, second: number, edges: Pair[]): boolean {
+    return edges.some((pair) => (pair[0] === first && pair[1] === second) || (pair[0] === second && pair[1] === first));
 }
 
 function pick<T>(arr: T[]): T {
