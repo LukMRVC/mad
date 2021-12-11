@@ -80,6 +80,7 @@ export function graphToMatrix(graph: Graph): Matrix {
     matrix.insertAt(i, i, 0);
   }
 
+  console.log('Calculating paths');
   for (let i = 1; i < graph.vertices.length + 1; ++i) {
     for (let j = 1; j < graph.vertices.length + 1; ++j) {
       for (let k = 1; k < graph.vertices.length + 1; ++k) {
@@ -88,6 +89,7 @@ export function graphToMatrix(graph: Graph): Matrix {
         }
       }
     }
+    console.log(`${i - 1} of ${graph.vertices.length}`);
   }
 
   return matrix;
